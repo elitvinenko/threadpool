@@ -29,7 +29,9 @@ private:
     void terminateWorkers();
 
 private:
-//    typedef std::priority_queue<DeferredTask,std::vector<DeferredTask>, Comparer>  TaskPool;
+
+//    typedef boost::heap::priority_queue<std::shared_ptr<DeferredTask>, Comparer>  DeferredTaskPool;
+//    typedef boost::heap::priority_queue<DeferredTask, Comparer>  DeferreTaskPool;
     typedef std::vector<DeferredTask>  DeferredTaskPool;
 
     std::mutex m_worker_mutex;

@@ -75,7 +75,7 @@ bool DeferredTasksExecutor::cancelTask(int taskId)
 void DeferredTasksExecutor::realWorker()
 {
     std::thread::id threadId = std::this_thread::get_id();
-    std::cout << "Starting worker..." << std::endl;
+    std::cout << "Starting worker..." << threadId <<  std::endl;
     while (true) {
         Task *task = nullptr; //TODO: move task to unique_ptr
         {   std::lock_guard<std::mutex> lock(m_worker_mutex);
@@ -91,6 +91,7 @@ void DeferredTasksExecutor::realWorker()
             }
         }
         if (task) {
+            std::cout << "new task from " << threadId << std::endl;
             task->exec();
             delete task;
         }
