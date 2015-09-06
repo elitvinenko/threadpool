@@ -7,6 +7,12 @@
 #include <queue>
 #include "deferredtask.h"
 
+class Comparer
+{
+public:
+        bool operator() (const DeferredTask lhs, const DeferredTask rhs);
+};
+
 class DeferredTasksExecutor
 {
 public:
@@ -22,13 +28,15 @@ private:
     void terminateWorkers();
 
 private:
-    typedef std::priority_queue<DeferredTask,std::vector<DeferredTask>, Comparer>  TaskPool;
+//    typedef std::priority_queue<DeferredTask,std::vector<DeferredTask>, Comparer>  TaskPool;
+    typedef std::vector<DeferredTask>  DeferredTaskPool;
+
     std::mutex m_worker_mutex;
     int m_workers;
     std::vector<std::thread> m_threads;
-    TaskPool m_tasks;
+    DeferredTaskPool m_tasks;
     int m_lastTaskId = 0;
-    TaskPool::iterator m_undoneIterator = m_tasks.begin(); // Really pointed to m_tasks.end();
+    DeferredTaskPool::iterator m_undoneIterator = m_tasks.begin(); // Really pointed to m_tasks.end();
     bool m_terminate = false;
 };
 
