@@ -8,7 +8,7 @@ LIBS += -levent -lpthread -lboost_system -lboost_filesystem
 OUT_dir := "./out/"
 
 Webserver_exe = $(OUT_dir)Webserver
-MME_SRC = main.cpp deferredtasksexecutor.cpp deferredtask.cpp 
+MME_SRC = main.cpp deferredtasksexecutor.cpp deferredtask.cpp task.cpp
 
 all: $(Webserver_exe)
 

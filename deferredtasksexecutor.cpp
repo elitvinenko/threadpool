@@ -4,17 +4,41 @@
 #include <chrono>
 #include <functional>
 #include <atomic>
+#include <memory>
 #include "deferredtasksexecutor.h"
+#include "task.h"
 
 DeferredTasksExecutor::DeferredTasksExecutor()
 {
 }
 
-DeferredTasksExecutor::DeferredTasksExecutor(int tasks): m_tasks(tasks)
+DeferredTasksExecutor::DeferredTasksExecutor(int taskCount)
 {
-    for(int i=0;i<tasks;++i) {
-        std::thread th_worker(worker, (void*)this);
+    for(int i=0;i<taskCount;++i) {
+        m_threads.push_back(std::thread(worker,(void*)this));
     }
+}
+
+int DeferredTasksExecutor::addTask(Task & _task, int priority)
+{
+    _task.setId(++m_lastTaskId);
+    DeferredTask task(_task, priority);
+    {
+        std::lock_guard<std::mutex> lock(m_worker_mutex);
+        m_tasks.push_back(task);
+    }
+    return m_lastTaskId;
+}
+
+bool DeferredTasksExecutor::cancelTask(int taskId)
+{
+    std::lock_guard<std::mutex> lock(m_worker_mutex);
+    for(auto & task:m_tasks) {
+        if(task.getId() == taskId) {
+            return task.cancel();
+        }
+    }
+    return false;
 }
 
 void DeferredTasksExecutor::realWorker()
@@ -35,17 +59,10 @@ void DeferredTasksExecutor::realWorker()
                 }
             }
         }
-        if (tast.isSet()) {
-            task();
+//        if (task->isSet()) {
+//            task->exec();
+            {
             {   std::lock_guard<std::mutex> lock(m_worker_mutex);
-                for(auto it = m_undoneIterator; it != end(m_tasks); ++it) {
-                    if(it->getThread() == threadId) {
-                        it->setStatus(DeferredTask::WORKING);
-                        it->setThread(threadId);
-                        task = it->getTask();
-                        break; // TODO: find task with higest priority;
-                    }
-                }
                 for(auto it = m_undoneIterator; it != end(m_tasks); ++it) {
                     if(it->getThread() == threadId) {
                         it->setStatus(DeferredTask::DONE);
