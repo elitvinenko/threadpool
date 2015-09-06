@@ -5,6 +5,7 @@
 #include <mutex>
 #include <vector>
 #include <queue>
+#include <boost/heap/priority_queue.hpp>
 #include "deferredtask.h"
 
 class Comparer

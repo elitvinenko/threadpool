@@ -5,8 +5,10 @@
 #include <functional>
 #include <atomic>
 #include <memory>
+#include <boost/heap/priority_queue.hpp>
 #include "deferredtasksexecutor.h"
 #include "task.h"
+
 
 bool Comparer::operator() (const DeferredTask lhs, const DeferredTask rhs)
 {
@@ -46,9 +48,17 @@ int DeferredTasksExecutor::addTask(Task & _task, int priority)
     DeferredTask task(_task, priority);
     {
         std::lock_guard<std::mutex> lock(m_worker_mutex);
-        m_tasks.push_back(task);
+        DeferredTaskPool::iterator it;
+        for(it = m_undoneIterator; it < end(m_tasks); ++it) {
+            if (!it->isDone())
+                if(it->getPriority()<priority)
+                    break;
+        }
+        m_tasks.insert(it, task);
+        m_undoneIterator = begin(m_tasks);
+        for(;m_undoneIterator != end(m_tasks) && m_undoneIterator->isDone(); ++m_undoneIterator);
     }
-    return m_lastTaskId;
+    return task.getId();
 }
 
 bool DeferredTasksExecutor::cancelTask(int taskId)
@@ -90,8 +100,7 @@ void DeferredTasksExecutor::realWorker()
                     it->setStatus(DeferredTask::DONE);
                 }
             }
-            // Move m_firstUndoneTaskIterator to last done position
-            for(;m_undoneIterator != end(m_tasks) && m_undoneIterator->isDone(); ++m_undoneIterator);
+            for(m_undoneIterator = begin(m_tasks);m_undoneIterator != end(m_tasks) && m_undoneIterator->isDone(); ++m_undoneIterator);
         }
         //  std::this_thread::sleep_for(std::chrono::milliseconds(10));
         if (m_terminate) break;
