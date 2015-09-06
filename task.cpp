@@ -1,8 +1,6 @@
 #include "task.h"
 
-Task::Task()
-{
-}
+Task::Task(void (*fn_ptr)(void*), void* arg) : m_fn_ptr(fn_ptr), m_arg(arg) {}
 
 void Task::exec()
 {

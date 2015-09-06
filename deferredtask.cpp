@@ -34,6 +34,17 @@ bool DeferredTask::isDone()
     return (m_status == DONE || m_status == CANCELED);
 }
 
+int DeferredTask::getPriority() const
+{
+    return m_priority;
+}
+
+void DeferredTask::setPriority(int priority)
+{
+    m_priority = priority;
+}
+
+
 int DeferredTask::getId() const
 {
     return m_task.getId();

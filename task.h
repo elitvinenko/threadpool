@@ -4,7 +4,7 @@
 class Task
 {
 public:
-    Task();
+    Task(void (*fn_ptr)(void*), void* arg);
     void exec();
     bool isSet()
     {

@@ -24,6 +24,8 @@ public:
     void setThread(std::thread::id thread);
     const Task & getTask() const;
     bool isDone();
+    int getPriority() const;
+    void setPriority(int priority);
 
 private:
     std::thread::id m_workingThreadId;
