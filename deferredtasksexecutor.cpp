@@ -5,7 +5,6 @@
 #include <functional>
 #include <atomic>
 #include <memory>
-#include <boost/heap/priority_queue.hpp>
 #include "deferredtasksexecutor.h"
 #include "task.h"
 
@@ -19,17 +18,23 @@ DeferredTasksExecutor::DeferredTasksExecutor(): DeferredTasksExecutor(std::threa
 {
 }
 
-DeferredTasksExecutor::DeferredTasksExecutor(int taskCount)
+DeferredTasksExecutor::DeferredTasksExecutor(unsigned int taskCount) : m_maxThreads(taskCount)
 {
-    std::cout << "Started with " << taskCount << " threads" << std::endl;
-    for(int i=0;i<taskCount;++i) {
-        m_threads.push_back(std::thread(worker,(void*)this));
-    }
+    if (m_maxThreads == 0) 
+        m_maxThreads = std::thread::hardware_concurrency();
 }
 
 DeferredTasksExecutor::~DeferredTasksExecutor()
 {
     terminateWorkers();
+}
+
+void DeferredTasksExecutor::execute()
+{
+    std::cout << "Started with " << m_maxThreads << " threads" << std::endl;
+    for(unsigned int i=0;i<m_maxThreads;++i) {
+        m_threads.push_back(std::thread(worker,(void*)this));
+    }
 }
 
 void DeferredTasksExecutor::terminateWorkers()

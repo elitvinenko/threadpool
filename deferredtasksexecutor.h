@@ -19,11 +19,12 @@ class DeferredTasksExecutor
 {
 public:
     DeferredTasksExecutor();
-    DeferredTasksExecutor(int taskCount);
+    DeferredTasksExecutor(unsigned int taskCount);
     ~DeferredTasksExecutor();
     int addTask(Task & task, int priority);
     bool cancelTask(int taskId);
     int getTaskStatus(int taskId);
+    void execute();
 private:
     static void worker(void *that);
     void realWorker();
@@ -35,6 +36,7 @@ private:
     std::vector<std::thread> m_threads;
     int m_lastTaskId = 0;
     bool m_terminate = false;
+    unsigned int  m_maxThreads;
 };
 
 #endif // DEFERREDTASKSEXECUTOR_H

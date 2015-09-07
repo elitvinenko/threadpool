@@ -3,7 +3,7 @@ CFLAGS += -g -Wall
 CFLAGS += -std=c++11
 CFLAGS += -I.
 
-LIBS += -levent -lpthread
+LIBS += -lpthread
 
 OUT_dir := "./out/"
 
