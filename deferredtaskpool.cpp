@@ -17,41 +17,43 @@ int DeferredTaskPool::addTask(Task & _task, int priority)
     DeferredTask deferredTask(_task, priority);
     {
         std::lock_guard<std::mutex> lock(m_worker_mutex);
-        Pool::iterator it;
-        // calculate real priority of task, based on priority and preconditions
-        int realPriority =priority;
+        Pool::iterator itSkipped = m_undoneIterator;
+        // Just skip all depended values
         if (!_task.getPreconditions().empty()) {
-            for(it = m_undoneIterator; it != end(m_tasks); ++it) {
+            for(Pool::iterator it = m_undoneIterator; it != end(m_tasks); ++it) {
                 if(_task.getPreconditions().count(it->getTask().getId())) {
-                    if(it->getPriority() < realPriority) {
-                        realPriority = it->getPriority();
-                    }
+                    itSkipped = it;
                 }
             }
+            if (itSkipped != m_tasks.end())
+                ++itSkipped;
         }
-        deferredTask.setPriorityWithDepndency(realPriority);
-
-        // try to find process place based on process priority 
-        for(it = m_undoneIterator; it != end(m_tasks); ++it) {
-            if (!it->isDone())
-                if(it->getPriorityWithDepndency() == realPriority && it->getPriority() < priority)
+        // try to find process place based on process priority
+        bool isMinimal = false;
+        for(; itSkipped != m_tasks.end(); ++itSkipped) {
+            if (!itSkipped->isDone())
+                if( itSkipped->getPriority() < priority) {
+                    isMinimal = true;
                     break;
-                if(it->getPriorityWithDepndency() < realPriority)
-                    break;
+                }
         }
-        // if is preconditions exists, move tast to last precondition
-//        if (!_task.getPreconditions().empty()) {
-//            std::set<int> preconditions = _task.getPreconditions();
-//            for(; it != end(m_tasks) && !preconditions.empty(); ++it) {
-//                    preconditions.erase(it->getTask().getId());
-//            }
-//        }
-        std::cout << "Adding task with priority " << priority << std::endl;
-        m_tasks.insert(it, deferredTask);
+        if (isMinimal)
+            m_tasks.insert(itSkipped, deferredTask);
+        else
+            m_tasks.push_back(deferredTask);
         m_undoneIterator = begin(m_tasks);
         for(;m_undoneIterator != end(m_tasks) && m_undoneIterator->isDone(); ++m_undoneIterator);
     }
     return deferredTask.getTask().getId();
+}
+
+void DeferredTaskPool::printfPoll()
+{
+    std::cout << "Pool content:" << std::endl;
+    for(auto task:m_tasks) {
+        int prio = task.getPriority();
+        std::cout << "task prio:" << prio  << std::endl;
+    }
 }
 
 bool DeferredTaskPool::cancelTask(int taskId)
@@ -72,7 +74,7 @@ Task *DeferredTaskPool::getTask()
         for(auto it = m_undoneIterator; it != end(m_tasks); ++it) {
             if(it->getStatus() == DeferredTask::INQEUE) {
                 it->setStatus(DeferredTask::WORKING);
-                std::cout << "getting task with priority " << it->getPriority() << "real:" << it->getPriorityWithDepndency() << std::endl;
+                std::cout << "getting task with priority " << it->getPriority() << std::endl;
                 return new Task(it->getTask());
             }
         }

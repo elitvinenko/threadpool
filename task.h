@@ -17,7 +17,7 @@ public:
     const std::set<int> & getPreconditions();
 
 private:
-    std::set<int> m_preconditions;
+    std::set<int> m_preconditions = {};
     void (*m_fn_ptr)(void*) = nullptr;
     void* m_arg;
     int m_Id;

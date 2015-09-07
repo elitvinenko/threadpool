@@ -14,6 +14,7 @@ public:
     Task *getTask();
     bool setDoneStatus(int taskId);
     int getTaskStatus(int taskId);
+    void printfPoll();
 protected:
     typedef std::list<DeferredTask> Pool;
     Pool  m_tasks;

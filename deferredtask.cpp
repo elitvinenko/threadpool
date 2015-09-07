@@ -31,18 +31,8 @@ int DeferredTask::getPriority() const
 
 void DeferredTask::setPriority(int priority)
 {
-    m_priority = priority;
+    m_priority = std::max(1000,priority);
 }
-int DeferredTask::getPriorityWithDepndency() const
-{
-    return m_priorityWithDepndency;
-}
-
-void DeferredTask::setPriorityWithDepndency(int priorityWithDepndency)
-{
-    m_priorityWithDepndency = priorityWithDepndency;
-}
-
 
 bool DeferredTask::cancel()
 {

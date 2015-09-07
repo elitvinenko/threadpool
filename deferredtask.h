@@ -27,13 +27,11 @@ public:
     void setPriority(int priority);
 
     int getPriorityWithDepndency() const;
-    void setPriorityWithDepndency(int priorityWithDepndency);
 
 private:
     STATUS m_status = INQEUE;
     Task m_task;
     int m_priority;
-    int m_priorityWithDepndency;
     void* result;
 };
 
