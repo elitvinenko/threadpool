@@ -1,12 +1,11 @@
+#include "deferredtasksexecutor.h"
+#include "task.h"
+
 #include <thread>
 #include <iostream>
 #include <utility>
 #include <chrono>
-#include <functional>
-#include <atomic>
 #include <memory>
-#include "deferredtasksexecutor.h"
-#include "task.h"
 
 
 bool Comparer::operator() (const DeferredTask lhs, const DeferredTask rhs)

@@ -2,7 +2,6 @@
 #include <iostream>
 #include <memory>
 #include <chrono>
-#include <atomic>
 #include <thread>
 #include <mutex>
 #include <set>
