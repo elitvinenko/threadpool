@@ -6,6 +6,7 @@
 #include <vector>
 #include <queue>
 #include <boost/heap/priority_queue.hpp>
+#include "deferredtaskpool.h"
 #include "deferredtask.h"
 
 class Comparer
@@ -20,7 +21,7 @@ public:
     DeferredTasksExecutor();
     DeferredTasksExecutor(int taskCount);
     ~DeferredTasksExecutor();
-    int addTask(Task & _task, int priority);
+    int addTask(Task & task, int priority);
     bool cancelTask(int taskId);
     int getTaskStatus(int taskId);
 private:
@@ -29,17 +30,10 @@ private:
     void terminateWorkers();
 
 private:
-
-//    typedef boost::heap::priority_queue<std::shared_ptr<DeferredTask>, Comparer>  DeferredTaskPool;
-//    typedef boost::heap::priority_queue<DeferredTask, Comparer>  DeferreTaskPool;
-    typedef std::vector<DeferredTask>  DeferredTaskPool;
-
-    std::mutex m_worker_mutex;
+    DeferredTaskPool taskpool;
     int m_workers;
     std::vector<std::thread> m_threads;
-    DeferredTaskPool m_tasks;
     int m_lastTaskId = 0;
-    DeferredTaskPool::iterator m_undoneIterator = m_tasks.begin(); // Really pointed to m_tasks.end();
     bool m_terminate = false;
 };
 

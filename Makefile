@@ -3,12 +3,12 @@ CFLAGS += -g -Wall
 CFLAGS += -std=c++11
 CFLAGS += -I.
 
-LIBS += -levent -lpthread -lboost_system -lboost_filesystem
+LIBS += -levent -lpthread
 
 OUT_dir := "./out/"
 
-Webserver_exe = $(OUT_dir)Webserver
-MME_SRC = main.cpp deferredtasksexecutor.cpp deferredtask.cpp task.cpp
+Webserver_exe = $(OUT_dir)executor
+MME_SRC = main.cpp deferredtasksexecutor.cpp deferredtask.cpp deferredtaskpool.cpp task.cpp
 
 all: $(Webserver_exe)
 
