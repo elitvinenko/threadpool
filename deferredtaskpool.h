@@ -4,6 +4,7 @@
 #include "deferredtask.h"
 #include "task.h"
 #include <list>
+#include <vector>
 #include <mutex>
 
 class DeferredTaskPool
@@ -16,6 +17,7 @@ public:
     bool setDoneStatus(int taskId);
     int getTaskStatus(int taskId);
     void printfPoll();
+    const std::vector<int> &getTasksPriority();
 protected:
     typedef std::list<DeferredTask> Pool;
     Pool  m_tasks;

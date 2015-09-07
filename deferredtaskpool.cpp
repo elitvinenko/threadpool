@@ -54,6 +54,14 @@ void DeferredTaskPool::printfPoll()
         std::cout << "task prio:" << prio  << std::endl;
     }
 }
+const std::vector<int> & DeferredTaskPool::getTasksPriority()
+{
+    std::vector<int> res;
+    for(auto task:m_tasks) {
+        res.push_back(task.getPriority());
+    }
+    return res;
+}
 
 bool DeferredTaskPool::cancelTask(int taskId)
 {

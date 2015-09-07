@@ -56,6 +56,11 @@ bool DeferredTasksExecutor::cancelTask(int taskId)
    return taskpool.cancelTask(taskId);
 }
 
+const std::vector<int> & DeferredTasksExecutor::getTasksPriority()
+{
+    return taskpool.getTasksPriority();
+}
+
 void DeferredTasksExecutor::realWorker()
 {
     std::thread::id threadId = std::this_thread::get_id();
