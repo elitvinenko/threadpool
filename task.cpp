@@ -18,3 +18,12 @@ void Task::setId(int Id)
     m_Id = Id;
 }
 
+void Task::addPrecondition(int precondition)
+{
+	m_preconditions.insert(precondition);
+}
+
+const  std::set<int> & Task::getPreconditions()
+{
+	return m_preconditions;
+}

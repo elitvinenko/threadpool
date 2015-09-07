@@ -14,16 +14,6 @@ void DeferredTask::setStatus(STATUS status)
     m_status = status;
 }
 
-const std::thread::id & DeferredTask::getThread() const
-{
-    return m_workingThreadId;
-}
-
-void DeferredTask::setThread(std::thread::id thread)
-{
-    m_workingThreadId = thread;
-}
-
 const Task & DeferredTask::getTask() const
 {
     return m_task;
@@ -42,12 +32,6 @@ int DeferredTask::getPriority() const
 void DeferredTask::setPriority(int priority)
 {
     m_priority = priority;
-}
-
-
-int DeferredTask::getId() const
-{
-    return m_task.getId();
 }
 
 bool DeferredTask::cancel()

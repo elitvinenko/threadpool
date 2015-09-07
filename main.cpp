@@ -10,7 +10,7 @@
 
 void func(void*)
 {
-    int timePeriod = rand()%2000000;
+    int timePeriod = rand()%1000000;
     std::cout << "sleeping !" << timePeriod << std::endl;
     usleep(timePeriod);
     std::cout << "done" << std::endl;
@@ -19,12 +19,14 @@ void func(void*)
 int main(int argc, char **argv)
 {
     srand (time(NULL));
-    DeferredTasksExecutor executor;
+    DeferredTasksExecutor executor();
     void (*fn_ptr)(void*) = func;
     Task task(fn_ptr,NULL);
-    for(int i=0;i<20;++i)
+    for(int i=0;i<100;++i)
         executor.addTask(task,random()%100);
-    std::cout <<"Press any key to continue" << std::endl;
+    executor.addTask(task,random()%100);
+    executor.addTask(task,random()%100);
+    executor.addTask(task,random()%100);
     getchar();
     return 0;
 }

@@ -1,6 +1,6 @@
 #ifndef DEFERREDTASKPOOL_H
 #define DEFERREDTASKPOOL_H
-#include <vector>
+#include <list>
 #include <mutex>
 #include "deferredtask.h"
 #include "task.h"
@@ -15,7 +15,7 @@ public:
     bool setDoneStatus(int taskId);
     int getTaskStatus(int taskId);
 protected:
-    typedef std::vector<DeferredTask> Pool;
+    typedef std::list<DeferredTask> Pool;
     Pool  m_tasks;
     int m_lastTaskId = 0;
     Pool::iterator m_undoneIterator = m_tasks.begin(); // Really pointed to m_tasks.end();
