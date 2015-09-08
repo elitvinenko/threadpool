@@ -28,15 +28,15 @@ int DeferredTaskPool::addTask(Task & _task, int priority)
                 ++itSkipped;
         }
         // try to find process place based on process priority
-        bool isMinimal = false;
+        bool isFound = false;
         for(; itSkipped != m_tasks.end(); ++itSkipped) {
             if (!itSkipped->isDone())
                 if( itSkipped->getPriority() < priority) {
-                    isMinimal = true;
+                    isFound = true;
                     break;
                 }
         }
-        if (isMinimal)
+        if (isFound)
             m_tasks.insert(itSkipped, deferredTask);
         else
             m_tasks.push_back(deferredTask);
