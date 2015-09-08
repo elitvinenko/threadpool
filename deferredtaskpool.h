@@ -14,8 +14,8 @@ public:
     int addTask(Task & _task, int priority);
     bool cancelTask(int taskId);
     Task *getTask();
+    bool hasTasks();
     bool setDoneStatus(int taskId);
-    int getTaskStatus(int taskId);
     void printfPoll();
     const std::vector<int> &getTasksPriority();
 protected:

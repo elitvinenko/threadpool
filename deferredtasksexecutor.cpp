@@ -36,6 +36,13 @@ void DeferredTasksExecutor::execute()
     }
 }
 
+void DeferredTasksExecutor::wait()
+{
+    while(taskpool.hasTasks()) {
+        std::this_thread::yield();
+    }
+}
+
 void DeferredTasksExecutor::terminateWorkers()
 {
     m_terminate = true;

@@ -53,6 +53,7 @@ int main(int argc, char **argv)
     testWithPrecondition(executor);
   //  testOrderingByPrioriy(executor);
     executor.execute();
-    getchar();
+    executor.wait();
+
     return 0;
 }

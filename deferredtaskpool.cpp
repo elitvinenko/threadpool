@@ -54,6 +54,8 @@ void DeferredTaskPool::printfPoll()
         std::cout << "task prio:" << prio  << std::endl;
     }
 }
+
+// without mutex!!!
 const std::vector<int> & DeferredTaskPool::getTasksPriority()
 {
     std::vector<int> res;
@@ -69,6 +71,19 @@ bool DeferredTaskPool::cancelTask(int taskId)
     for(auto & task:m_tasks) {
         if(task.getTask().getId() == taskId) {
             return task.cancel();
+        }
+    }
+    return false;
+}
+
+bool DeferredTaskPool::hasTasks()
+{
+    std::lock_guard<std::mutex> lock(m_worker_mutex);
+    if(m_undoneIterator != m_tasks.end()) {   // We have tasks in queue
+        for(auto it = m_undoneIterator; it != end(m_tasks); ++it) {
+            if(it->getStatus() == DeferredTask::INQEUE || it->getStatus() == DeferredTask::WORKING ) {
+                return true;
+            }
         }
     }
     return false;

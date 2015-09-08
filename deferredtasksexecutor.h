@@ -26,6 +26,7 @@ public:
     int getTaskStatus(int taskId);
     const std::vector<int> & getTasksPriority();
     void execute();
+    void wait();
 private:
     static void worker(void *that);
     void realWorker();
