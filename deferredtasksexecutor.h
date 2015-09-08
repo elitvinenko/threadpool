@@ -24,7 +24,7 @@ public:
     int addTask(Task & task, int priority);
     bool cancelTask(int taskId);
     int getTaskStatus(int taskId);
-    const std::vector<int> & getTasksPriority();
+    std::shared_ptr<std::vector<int> > getTasksPriority();
     void execute();
     void wait();
 private:

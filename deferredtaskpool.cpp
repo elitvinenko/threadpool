@@ -56,13 +56,13 @@ void DeferredTaskPool::printfPoll()
 }
 
 // without mutex!!!
-const std::vector<int> & DeferredTaskPool::getTasksPriority()
+std::shared_ptr<std::vector<int>> DeferredTaskPool::getTasksPriority()
 {
     std::vector<int> res;
     for(auto task:m_tasks) {
         res.push_back(task.getPriority());
     }
-    return res;
+    return std::make_shared<std::vector<int>>(res);
 }
 
 bool DeferredTaskPool::cancelTask(int taskId)

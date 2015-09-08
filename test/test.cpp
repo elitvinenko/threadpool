@@ -4,6 +4,7 @@
 #include "../task.h"
 #include <gtest/gtest.h>
 #include <vector>
+#include <memory>
 
 void func(void*)
 {
@@ -12,11 +13,11 @@ void func(void*)
 
 TEST(DeferredTaskPoolTest, AddingTasks) {
     DeferredTasksExecutor executor;
-    ASSERT_EQ(0, executor.getTasksPriority().size());
+    ASSERT_EQ(0, executor.getTasksPriority()->size());
     void (*fn_ptr)(void*) = func;
     Task task(fn_ptr,NULL);
     executor.addTask(task, 40);
-    ASSERT_EQ(1, executor.getTasksPriority().size());
+    ASSERT_EQ(1, executor.getTasksPriority()->size());
 }
 
 TEST(DeferredTaskPoolTest, SortingOrder) {
@@ -33,17 +34,17 @@ TEST(DeferredTaskPoolTest, SortingOrder) {
     executor.addTask(task, 90);
     executor.addTask(task, 30);
     executor.addTask(task, 80);
-    std::vector<int> prioroties = executor.getTasksPriority();
-    ASSERT_EQ(90, prioroties[0]);
-    ASSERT_EQ(80, prioroties[1]);
-    ASSERT_EQ(70, prioroties[2]);
-    ASSERT_EQ(60, prioroties[3]);
-    ASSERT_EQ(50, prioroties[4]);
-    ASSERT_EQ(40, prioroties[5]);
-    ASSERT_EQ(30, prioroties[6]);
-    ASSERT_EQ(20, prioroties[7]);
-    ASSERT_EQ(10, prioroties[8]);
-    ASSERT_EQ(00, prioroties[9]);
+    std::shared_ptr<std::vector<int>> prioroties = executor.getTasksPriority();
+    ASSERT_EQ(90, prioroties->at(0));
+    ASSERT_EQ(80, prioroties->at(1));
+    ASSERT_EQ(70, prioroties->at(2));
+    ASSERT_EQ(60, prioroties->at(3));
+    ASSERT_EQ(50, prioroties->at(4));
+    ASSERT_EQ(40, prioroties->at(5));
+    ASSERT_EQ(30, prioroties->at(6));
+    ASSERT_EQ(20, prioroties->at(7));
+    ASSERT_EQ(10, prioroties->at(8));
+    ASSERT_EQ(00, prioroties->at(9));
 }
 
 TEST(DeferredTaskPoolTest, SortingOrderWithDependency) {
@@ -61,17 +62,17 @@ TEST(DeferredTaskPoolTest, SortingOrderWithDependency) {
     executor.addTask(task2, 90);
     executor.addTask(task2, 50);
 
-    std::vector<int> prioroties = executor.getTasksPriority();
-    ASSERT_EQ(40, prioroties[0]);
-    ASSERT_EQ(30, prioroties[1]);
-    ASSERT_EQ(20, prioroties[2]);
-    ASSERT_EQ(10, prioroties[3]);
-    ASSERT_EQ(00, prioroties[4]);
-    ASSERT_EQ(90, prioroties[5]);
-    ASSERT_EQ(80, prioroties[6]);
-    ASSERT_EQ(70, prioroties[7]);
-    ASSERT_EQ(60, prioroties[8]);
-    ASSERT_EQ(50, prioroties[9]);
+    std::shared_ptr<std::vector<int>> prioroties = executor.getTasksPriority();
+    ASSERT_EQ(40, prioroties->at(0));
+    ASSERT_EQ(30, prioroties->at(1));
+    ASSERT_EQ(20, prioroties->at(2));
+    ASSERT_EQ(10, prioroties->at(3));
+    ASSERT_EQ(00, prioroties->at(4));
+    ASSERT_EQ(90, prioroties->at(5));
+    ASSERT_EQ(80, prioroties->at(6));
+    ASSERT_EQ(70, prioroties->at(7));
+    ASSERT_EQ(60, prioroties->at(8));
+    ASSERT_EQ(50, prioroties->at(9));
 }
 
 

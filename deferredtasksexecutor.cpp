@@ -63,7 +63,7 @@ bool DeferredTasksExecutor::cancelTask(int taskId)
    return taskpool.cancelTask(taskId);
 }
 
-const std::vector<int> & DeferredTasksExecutor::getTasksPriority()
+std::shared_ptr<std::vector<int> > DeferredTasksExecutor::getTasksPriority()
 {
     return taskpool.getTasksPriority();
 }
