@@ -1,5 +1,5 @@
 
-CFLAGS += -g
+CFLAGS += -g -Wall
 CFLAGS += -std=c++11
 CFLAGS += -I.
 

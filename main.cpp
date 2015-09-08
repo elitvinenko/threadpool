@@ -1,3 +1,7 @@
+/*
+*   Sample application
+*/
+
 #include <cstdio>
 #include <chrono>
 #include <iostream>
@@ -6,6 +10,8 @@
 #include <time.h>
 #include "deferredtasksexecutor.h"
 #include "task.h"
+
+
 
 void func(void*)
 {

@@ -34,9 +34,7 @@ private:
 
 private:
     DeferredTaskPool taskpool;
-    int m_workers;
     std::vector<std::thread> m_threads;
-    int m_lastTaskId = 0;
     bool m_terminate = false;
     unsigned int  m_maxThreads;
 };

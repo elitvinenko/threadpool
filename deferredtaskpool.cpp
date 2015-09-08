@@ -55,9 +55,10 @@ void DeferredTaskPool::printfPoll()
     }
 }
 
-// without mutex!!!
+
 std::shared_ptr<std::vector<int>> DeferredTaskPool::getTasksPriority()
 {
+    std::lock_guard<std::mutex> lock(m_worker_mutex);
     std::vector<int> res;
     for(auto task:m_tasks) {
         res.push_back(task.getPriority());

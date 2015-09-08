@@ -7,10 +7,6 @@ class Task
 public:
     Task(void (*fn_ptr)(void*), void* arg);
     void exec();
-    bool isSet()
-    {
-        return m_fn_ptr != nullptr;
-    }
     const int & getId() const;
     void setId(int Id);
     void addPrecondition(int precondition);
